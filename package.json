@@ -1,0 +1,14 @@
+{
+  "name": "@trapcodeio/mongodb-backup",
+  "scripts": {
+    "backup": "node index.js backup",
+    "restore": "node index.js restore"
+  },
+  "dependencies": {
+    "@xpresser/env": "^2.0.8",
+    "ora": "5.4.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}
