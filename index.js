@@ -35,3 +35,7 @@ console.log();
 execSync(command);
 // stop
 spinner.stop();
+
+console.log();
+console.log(`${isBackup ? "BACKUP" : "RESTORE"} successful!`);
+console.log(`${isBackup ? "BACKUP" : "RESTORE"} folder: ${__dirname + "/dump"}`);
