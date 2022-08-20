@@ -7,6 +7,7 @@
     "backup": "node index.js backup",
     "restore": "node index.js restore"
   },
+  "repository": "https://github.com/trapcodeio/mongo-backup",
   "dependencies": {
     "@xpresser/env": "^2.0.8",
     "ora": "5.4.1"
