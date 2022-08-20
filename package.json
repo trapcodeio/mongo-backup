@@ -13,5 +13,6 @@
   },
   "devDependencies": {
     "prettier": "^2.7.1"
-  }
+  },
+  "version": "1.0.0"
 }
