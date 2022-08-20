@@ -1,5 +1,5 @@
 {
-  "name": "@trapcodeio/mongodb-backup",
+  "name": "@trapcode/mongodb-backup",
   "bin": {
     "mongodb-backup": "./index.js"
   },
