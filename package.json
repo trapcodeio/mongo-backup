@@ -1,5 +1,8 @@
 {
   "name": "@trapcodeio/mongodb-backup",
+  "bin": {
+    "mongodb-backup": "./index.js"
+  },
   "scripts": {
     "backup": "node index.js backup",
     "restore": "node index.js restore"

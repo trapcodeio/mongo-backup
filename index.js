@@ -1,25 +1,16 @@
-const { env } = require("./env");
+#!/usr/bin/env node
+
+const { env, cwd } = require("./env");
 const { execSync } = require("child_process");
 const ora = require("ora");
+const os = require("os");
+const fs = require("fs");
 
-const { DB_USER, DB_PASSWORD, DB_NAME, DB_SERVER } = env;
-
-console.log();
-
-const todo = process.argv[2];
-const todos = ["backup", "restore"];
-
-if (!todos.includes(todo)) {
-    console.log("Todo is required!");
-    process.exit();
-}
-
-const isBackup = todo === "backup";
-
-const password = encodeURIComponent(DB_PASSWORD);
-
-const restore = parseServer(`mongorestore --uri ${DB_SERVER}`);
-const backup = parseServer(`mongodump --uri ${DB_SERVER}/<DATABASE> --forceTableScan`);
+/**
+ * ============================================================
+ * ======================== FUNCTIONS =========================
+ * ============================================================
+ */
 
 function parseServer(str) {
     return str
@@ -28,11 +19,63 @@ function parseServer(str) {
         .replace("<DATABASE>", DB_NAME);
 }
 
+/**
+ * ============================================================
+ * ======================== MAIN CODE =========================
+ * ============================================================
+ */
+const { DB_USER, DB_PASSWORD, DB_NAME, DB_SERVER } = env;
+
+const todo = String(process.argv[2] || "").toLowerCase();
+const todos = ["backup", "restore"];
+
+if (!todos.includes(todo)) {
+    console.log("Todo is required!");
+    process.exit();
+}
+
+// Spacing
+console.log();
+
+// Set isBackup to true if todo is backup
+const isBackup = todo === "backup";
+
+// encode password
+const password = encodeURIComponent(DB_PASSWORD);
+
+// Create yaml file
+const parsedServer = parseServer(DB_SERVER);
+
+// yaml config content
+const yaml = [
+    // if is backup, add the db name
+    // else ignore because restore will use the db name from the dump file
+    isBackup ? `uri: ${parsedServer}/${DB_NAME}` : `uri: ${parsedServer}`
+].join(os.EOL);
+
+// yaml file
+const yamlFile = `${cwd}/mongo-${todo}-config.yaml`;
+
+// Create yaml file
+fs.writeFileSync(yamlFile, yaml);
+
+// Define commands
+const restore = `mongorestore --config=${yamlFile}`;
+const backup = `mongodump --config=${yamlFile} --forceTableScan`;
+
+// Get Active Command
 const command = isBackup ? backup : restore;
+
+console.log(command);
+
 const spinner = ora(`Starting: ${todo.toUpperCase()} ===> ${command}`).start();
 console.log();
 
 execSync(command);
+
+// delete yaml file
+fs.unlinkSync(yamlFile);
+
 // stop
 spinner.stop();
 
