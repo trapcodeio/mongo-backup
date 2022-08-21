@@ -1,6 +1,6 @@
 # mongo-backup
 
-Note this package depends on [MongoDb Database tools](https://www.mongodb.com/docs/database-tools/installation/installation`).
+Note this package depends on [MongoDb Database tools](https://www.mongodb.com/docs/database-tools/installation/installation).
 Make sure you have it installed in your machine.
 
 
