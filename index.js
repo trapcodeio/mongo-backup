@@ -6,17 +6,27 @@ const ora = require("ora");
 const os = require("os");
 const fs = require("fs");
 
+const { DB_USER, DB_PASSWORD, DB_NAME, DB_SERVER } = env;
+
 /**
  * ============================================================
  * ======================== FUNCTIONS =========================
  * ============================================================
  */
 
-function parseServer(str) {
-    return str
+function parseServer() {
+    // encode password
+    const password = encodeURIComponent(DB_PASSWORD);
+
+    return (DB_SERVER || "")
         .replace("<USER>", DB_USER)
+        .replace("<user>", DB_USER)
+
         .replace("<PASSWORD>", password)
-        .replace("<DATABASE>", DB_NAME);
+        .replace("<password>", password)
+
+        .replace("<DATABASE>", DB_NAME)
+        .replace("<database>", DB_NAME);
 }
 
 /**
@@ -24,7 +34,6 @@ function parseServer(str) {
  * ======================== MAIN CODE =========================
  * ============================================================
  */
-const { DB_USER, DB_PASSWORD, DB_NAME, DB_SERVER } = env;
 
 const todo = String(process.argv[2] || "").toLowerCase();
 const todos = ["backup", "restore"];
@@ -40,11 +49,8 @@ console.log();
 // Set isBackup to true if todo is backup
 const isBackup = todo === "backup";
 
-// encode password
-const password = encodeURIComponent(DB_PASSWORD);
-
 // Create yaml file
-const parsedServer = parseServer(DB_SERVER);
+const parsedServer = parseServer();
 
 // yaml config content
 const yaml = [
