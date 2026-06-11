@@ -36,6 +36,13 @@ DB_SERVER="mongodb+srv://admin:<password>@server3.mongodb.net/<database>?retryWr
 ```
 
 
+## How it works
+
+- **Backup** dumps the database to a `dump` folder in your current working directory.
+- **Restore** reads from that same `dump` folder.
+  - If `DB_SERVER` contains a database name (directly or via the `<database>` placeholder), the dump is restored **into that database**.
+  - Otherwise, only the database matching `DB_NAME` is restored from the dump, keeping its original name.
+
 ## Backup or Restore
 
 There are two ways to go about this:
