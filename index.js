@@ -97,12 +97,27 @@ if (isBackup) {
 
     if (database) {
         // a database in the uri makes mongorestore expect the database-level
-        // dump folder, not the top-level dump folder
-        const dbDumpFolder = `${dumpFolder}/${DB_NAME || database}`;
+        // dump folder, not the top-level dump folder.
+        // the dump folder is named after the database that was dumped,
+        // which may differ from the database being restored into
+        let dbDumpFolder = `${dumpFolder}/${DB_NAME || database}`;
 
         if (!fs.existsSync(dbDumpFolder)) {
-            console.log(`No dump found for database at: ${dbDumpFolder}`);
-            process.exit(1);
+            const dumpedDatabases = fs.existsSync(dumpFolder)
+                ? fs
+                      .readdirSync(dumpFolder, { withFileTypes: true })
+                      .filter((d) => d.isDirectory())
+                      .map((d) => d.name)
+                : [];
+
+            if (dumpedDatabases.length === 1) {
+                dbDumpFolder = `${dumpFolder}/${dumpedDatabases[0]}`;
+            } else {
+                console.log(`No dump found for database at: ${dbDumpFolder}`);
+                if (dumpedDatabases.length)
+                    console.log(`Databases found in dump folder: ${dumpedDatabases.join(", ")}`);
+                process.exit(1);
+            }
         }
 
         command += ` --dir="${dbDumpFolder}"`;

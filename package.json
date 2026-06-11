@@ -3,6 +3,11 @@
   "bin": {
     "mongodb-backup": "./index.js"
   },
+  "files": [
+    "index.js",
+    "env.js",
+    "env.example"
+  ],
   "scripts": {
     "backup": "node index.js backup",
     "restore": "node index.js restore"
@@ -15,5 +20,5 @@
   "devDependencies": {
     "prettier": "^2.7.1"
   },
-  "version": "1.0.8"
+  "version": "1.0.9"
 }
